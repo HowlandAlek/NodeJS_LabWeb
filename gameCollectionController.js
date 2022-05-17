@@ -15,8 +15,8 @@ module.exports.obtener_juegos = function (req, res) {
 module.exports.agregar_juego = function (req, res) {
     fs.readFile(__dirname + "/" + "juegos.json", "utf8", function (err, data) {
         const array = JSON.parse(data);
-        console.log(err);
-        console.log(data);
+        console.log("Error: " + err);
+        console.log("Data inicial: " + data + "\n");
         const nuevo = req.body;
         array.push(nuevo);
         fs.writeFile(
@@ -47,16 +47,40 @@ module.exports.borrar_juego = function (req, res) {
         const juegos_new = juegos.filter((elem) => {
             return elem.id != req.params.gameID;
         });
-        console.log(req.params.gameID);
+        console.log("Juego a eliminar: " + req.params.gameID);
         fs.writeFile(
             __dirname + "/" + "juegos.json",
             JSON.stringify(juegos_new),
             "utf8",
             function (err, data) {
-                console.log(err);
+                console.log("Error: " + err);
                 res.end(err);
             }
         );
         res.end(JSON.stringify(juegos_new));
+    });
+};
+
+//https://stackoverflow.com/questions/50920180 filter-a-javascript-array-of-strings-matching-a-sequence-of-characters
+module.exports.buscar_juego_keyword = function (req, res) {
+    fs.readFile(__dirname + "/" + "juegos.json", "utf8", function (err, data) {
+        const juegos = JSON.parse(data);
+        const keyword = req.params.keyword;
+        console.log("Keyword:" + keyword);
+
+        const juegos_filtered = juegos.filter((elem) => {
+            for (var i = 0; i < keyword.length; i++) {
+                if (
+                    elem.nombre.includes(keyword.charAt(i)) &&
+                    i == keyword.length - 1
+                ) {
+                    return elem;
+                }
+            }
+        });
+
+        console.log(juegos_filtered);
+
+        res.end(JSON.stringify(juegos_filtered));
     });
 };

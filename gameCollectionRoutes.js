@@ -12,4 +12,8 @@ module.exports = function (app) {
     app.route("/games/:gameIndex").get(gameCollection.obtener_juego);
 
     app.route("/games/:gameID").delete(gameCollection.borrar_juego);
+
+    app.route("/games/search/:keyword").get(
+        gameCollection.buscar_juego_keyword
+    );
 };
