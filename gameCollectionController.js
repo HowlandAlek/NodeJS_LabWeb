@@ -69,13 +69,22 @@ module.exports.buscar_juego_keyword = function (req, res) {
         console.log("Keyword:" + keyword);
 
         const juegos_filtered = juegos.filter((elem) => {
-            for (var i = 0; i < keyword.length; i++) {
-                if (
-                    elem.nombre.includes(keyword.charAt(i)) &&
-                    i == keyword.length - 1
-                ) {
-                    return elem;
+            var contains_keyword = false;
+            const keyword_lowercase = keyword.toLowerCase();
+            const name_lowercase = elem.nombre.toLowerCase();
+            for (var i = 0; i < keyword_lowercase.length; i++) {
+                console.log("KEY(i) = " + keyword_lowercase.charAt(i));
+                console.log("Nombre: " + name_lowercase);
+                if (name_lowercase.includes(keyword_lowercase.charAt(i))) {
+                    contains_keyword = true;
+                } else {
+                    contains_keyword = false;
+                    break;
                 }
+            }
+
+            if (contains_keyword) {
+                return elem;
             }
         });
 
